@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { selectCurrentUser } from './redux/user/user.selectors';
 import { createGlobalStyle } from 'styled-components';
 
 import HomePage from './pages/homepage/homepage.component';
@@ -12,10 +11,16 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up
 
 import Header from './components/header/header.component';
 
+import { selectCurrentUser } from './redux/user/user.selectors';
+import { checkUserSession } from './redux/user/user.actions';
+
 class App extends React.Component {
   unsubscribeFromAuth = null;
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { checkUserSession } = this.props;
+    checkUserSession();
+  }
 
   componentWillUnmount() {
     this.unsubscribeFromAuth();
@@ -46,10 +51,6 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
-});
-
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
@@ -69,4 +70,12 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  checkUserSession: () => dispatch(checkUserSession()),
+});
+
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
