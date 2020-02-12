@@ -4,7 +4,7 @@ import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
 
 import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
-import './sign-up.styles.scss';
+import { SignUpContainer, SignUpTitle } from './sign-up.styles';
 
 class SignUp extends React.Component {
   constructor() {
@@ -24,7 +24,7 @@ class SignUp extends React.Component {
     const { displayName, email, password, confirmPassword } = this.state;
 
     if (password !== confirmPassword) {
-      alert("password don't match");
+      alert("passwords don't match");
       return;
     }
 
@@ -33,7 +33,9 @@ class SignUp extends React.Component {
         email,
         password
       );
+
       await createUserProfileDocument(user, { displayName });
+
       this.setState({
         displayName: '',
         email: '',
@@ -47,14 +49,15 @@ class SignUp extends React.Component {
 
   handleChange = event => {
     const { name, value } = event.target;
+
     this.setState({ [name]: value });
   };
 
   render() {
     const { displayName, email, password, confirmPassword } = this.state;
     return (
-      <div className="sign-up">
-        <h2 className="title">I do not have an account</h2>
+      <SignUpContainer>
+        <SignUpTitle>I do not have a account</SignUpTitle>
         <span>Sign up with your email and password</span>
         <form className="sign-up-form" onSubmit={this.handleSubmit}>
           <FormInput
@@ -66,7 +69,7 @@ class SignUp extends React.Component {
             required
           />
           <FormInput
-            type="text"
+            type="email"
             name="email"
             value={email}
             onChange={this.handleChange}
@@ -89,9 +92,9 @@ class SignUp extends React.Component {
             label="Confirm Password"
             required
           />
-          <CustomButton type="submit">Sign Up</CustomButton>
+          <CustomButton type="submit">SIGN UP</CustomButton>
         </form>
-      </div>
+      </SignUpContainer>
     );
   }
 }
